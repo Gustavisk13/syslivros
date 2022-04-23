@@ -19,8 +19,8 @@ public class PrincipalController {
     }
 
     @FXML
-    void chamaConsultaLivro(ActionEvent event) {
-
+    void chamaConsultaLivro(ActionEvent event) throws Exception {
+        Principal.mudarCenaConsulta();
     }
 
 }

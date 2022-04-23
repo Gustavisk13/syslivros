@@ -35,6 +35,15 @@ public class Principal extends Application {
 		stagePrincipal.show();
 	}
 
+	public static void mudarCenaConsulta() throws Exception{
+		Parent root = FXMLLoader.load(Principal.class.getResource("../javafx/cenaconsulta.fxml"));
+		Scene scene = new Scene(root);
+
+		stagePrincipal.setTitle("Sistema de Biblioteca - Consultar Livro");
+		stagePrincipal.setScene(scene);
+		stagePrincipal.show();
+	}
+
     public static void main(String[] args) {
         launch(args);
     }

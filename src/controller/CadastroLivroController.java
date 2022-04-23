@@ -14,6 +14,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -29,6 +31,12 @@ public class CadastroLivroController {
 
     @FXML
     private Button btnAdicionarLivro;
+
+    @FXML
+    private Menu mMenu;
+
+    @FXML
+    private MenuItem miVoltar;
 
     @FXML
     private Button btnBuscarLivro;
@@ -227,8 +235,11 @@ public class CadastroLivroController {
     @FXML
     void handlerTabela(MouseEvent event) {
         livrosPorClick(event);
-        
+    }
 
+    @FXML
+    void handlerVoltarMenu(ActionEvent event) throws Exception {
+        Principal.mudarCenaPrincipal();
     }
 
         private  String formatIsbn(String isbn) throws Exception{
@@ -290,4 +301,5 @@ public class CadastroLivroController {
             tbvTabela.setItems(livrosObservableList);
             tbvTabela.refresh();
         }
+    
     }

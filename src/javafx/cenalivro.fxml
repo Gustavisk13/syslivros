@@ -17,20 +17,10 @@
    <top>
       <MenuBar prefWidth="623.0" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
+          <Menu fx:id="mMenu" mnemonicParsing="false" text="MENU ">
+               <items>
+                  <MenuItem fx:id="miVoltar" mnemonicParsing="false" onAction="#handlerVoltarMenu" text="VOLTAR" />
+               </items>
           </Menu>
         </menus>
       </MenuBar>
