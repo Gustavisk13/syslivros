@@ -25,6 +25,7 @@ import javafx.scene.input.MouseEvent;
 public class CadastroLivroController {
 
     private final int MAXISBN = 13;
+    Integer somaBusca = 0;
 
     @FXML
     private Button btnAdicionarLivro;
@@ -75,6 +76,9 @@ public class CadastroLivroController {
     private Button btnEditar;
 
     @FXML
+    private Button btnMaisDez;
+
+    @FXML
     private TextField tfTituloLivro;
 
     @FXML
@@ -90,6 +94,7 @@ public class CadastroLivroController {
         LivroDao ldao = new LivroDao();
         tfPesquisarLivro.requestFocus();
         Boolean campoVazio = verificaCampoVazio();
+        btnMaisDez.setVisible(true);
         if (campoVazio == true) {
 
             titulo = tfPesquisarLivro.getText();
@@ -98,7 +103,7 @@ public class CadastroLivroController {
             tbvTabela.setItems(livrosObservableList);
             tfPesquisarLivro.clear();
         } else {
-            livros = ldao.findAll();
+            livros = ldao.findAll(20);
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfPesquisarLivro.clear();
@@ -208,6 +213,18 @@ public class CadastroLivroController {
     }
 
     @FXML
+    void handlerMaisDez(ActionEvent event) {
+            somaBusca = somaBusca + 10;
+            LivroDao ldao = new LivroDao();
+            livros = ldao.findAll(20 + somaBusca);
+            livrosObservableList = FXCollections.observableArrayList(livros);
+            tbvTabela.setItems(livrosObservableList);
+            tfPesquisarLivro.clear();
+
+
+    }
+
+    @FXML
     void handlerTabela(MouseEvent event) {
         livrosPorClick(event);
         
@@ -268,7 +285,7 @@ public class CadastroLivroController {
     
         private void refreshTable (){
             LivroDao ldao = new LivroDao();
-            livros = ldao.findAll();
+            livros = ldao.findAll(20);
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tbvTabela.refresh();

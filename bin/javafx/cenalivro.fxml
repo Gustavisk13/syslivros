@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="733.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastroLivroController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="597.0" prefWidth="772.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastroLivroController">
    <top>
       <MenuBar prefWidth="623.0" BorderPane.alignment="CENTER">
         <menus>
@@ -36,7 +36,7 @@
       </MenuBar>
    </top>
    <left>
-      <AnchorPane prefHeight="501.0" prefWidth="325.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="572.0" prefWidth="367.0" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="32.0" layoutY="155.0" text="TITULO" />
             <Label layoutX="32.0" layoutY="197.0" text="ISBN" />
@@ -60,13 +60,14 @@
                </font>
             </Label>
             <TextArea fx:id="tfDescricaoLivro" layoutX="96.0" layoutY="339.0" prefHeight="126.0" prefWidth="209.0" wrapText="true" />
+            <Button fx:id="btnMaisDez" layoutX="327.0" layoutY="14.0" mnemonicParsing="false" onAction="#handlerMaisDez" text="+10" visible="false" />
          </children>
       </AnchorPane>
    </left>
    <right>
       <AnchorPane prefHeight="501.0" prefWidth="402.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="tbvTabela" layoutX="9.0" layoutY="41.0" onMouseClicked="#handlerTabela" prefHeight="400.0" prefWidth="381.0">
+            <TableView fx:id="tbvTabela" layoutX="9.0" layoutY="41.0" onMouseClicked="#handlerTabela" prefHeight="524.0" prefWidth="381.0">
                <columns>
                   <TableColumn fx:id="tcTitulo" prefWidth="75.0" text="TITULO" />
                   <TableColumn fx:id="tcIsbn" prefWidth="116.0" text="ISBN" />

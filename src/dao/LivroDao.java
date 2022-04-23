@@ -11,6 +11,7 @@ import config.ConfigDB;
 import domain.Livro;
 
 public class LivroDao {
+    
 
     public void insert(Livro livro) {
 
@@ -41,7 +42,7 @@ public class LivroDao {
     
     }
 
-    public List<Livro> findAll() {
+    public List<Livro> findAll(Integer busca) {
 
         String sql = "SELECT id, titulo, isbn, edicao, autor, descricao FROM livro ";
         List<Livro> livros = null;
@@ -51,11 +52,10 @@ public class LivroDao {
                 PreparedStatement statement = connection.prepareStatement(sql)) {
 
             ResultSet resultSet = statement.executeQuery();
-
             livros = new ArrayList<>();
             Livro livro;
 
-            while (resultSet.next()) {
+            while (resultSet.next() && livros.size()<=busca) {
                 livro = obterLivroPorResultSet(resultSet);
                 livros.add(livro);
             }
@@ -158,7 +158,5 @@ public class LivroDao {
 
         return livro;
     }
-
-    
 
 }
