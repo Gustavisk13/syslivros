@@ -207,8 +207,9 @@ public class ConsultaLivroController {
         lblAutor.setText(livro.getAutor());
         lblDescricao.setText(livro.getDescricao());
 
-        lblPlaceHolder.setVisible(false);
         revelaConsulta();
+        lblPlaceHolder.setVisible(false);
+        
 
     }
     return livro;

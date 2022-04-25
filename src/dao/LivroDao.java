@@ -133,7 +133,7 @@ public class LivroDao {
             System.out.println(statement);
             livros = new ArrayList<>();
 
-            while (resultSet.next()) {
+            while (resultSet.next() && livros.size() <= 20) {
                 livro = obterLivroPorResultSet(resultSet);
                 livros.add(livro);
             }
@@ -158,7 +158,7 @@ public class LivroDao {
             System.out.println(statement);
             livros = new ArrayList<>();
 
-            while (resultSet.next()) {
+            while (resultSet.next() && livros.size() <= 20) {
                 livro = obterLivroPorResultSet(resultSet);
                 livros.add(livro);
             }
@@ -170,6 +170,7 @@ public class LivroDao {
 
         
     }
+    
     public List<Livro> findByIsbn (String isbn){
         String sql = "SELECT id, titulo, isbn, descricao, autor, edicao FROM livro WHERE UPPER(isbn) like UPPER(?)";
         Livro livro = null;
@@ -184,7 +185,7 @@ public class LivroDao {
             System.out.println(statement);
             livros = new ArrayList<>();
 
-            while (resultSet.next()) {
+            while (resultSet.next() && livros.size() <= 20) {
                 livro = obterLivroPorResultSet(resultSet);
                 livros.add(livro);
             }
@@ -195,6 +196,7 @@ public class LivroDao {
         return livros;
 
     }
+    
     public List<Livro> findByEdicao (String edicao){
         String sql = "SELECT id, titulo, isbn, descricao, autor, edicao FROM livro WHERE UPPER(edicao) like UPPER(?)";
         Livro livro = null;
@@ -209,7 +211,7 @@ public class LivroDao {
             System.out.println(statement);
             livros = new ArrayList<>();
 
-            while (resultSet.next()) {
+            while (resultSet.next() && livros.size() <= 20) {
                 livro = obterLivroPorResultSet(resultSet);
                 livros.add(livro);
             }
@@ -220,6 +222,7 @@ public class LivroDao {
         return livros;
 
     }
+    
     private Livro obterLivroPorResultSet(ResultSet resultSet) throws SQLException {
         Livro livro = new Livro();
 
