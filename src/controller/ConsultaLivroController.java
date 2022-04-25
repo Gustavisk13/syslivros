@@ -155,7 +155,6 @@ public class ConsultaLivroController {
     @FXML
     void handlerTabelaLivro(MouseEvent event) {
          livrosPorClick(event);
-         revelaConsulta();
     }
 
     @FXML
@@ -205,6 +204,7 @@ public class ConsultaLivroController {
         lblDescricao.setText(livro.getDescricao());
 
         lblPlaceHolder.setVisible(false);
+        revelaConsulta();
 
     }
     return livro;

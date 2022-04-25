@@ -31,7 +31,6 @@ public class CadastroLivroController {
     Alert errorAlert = new Alert(AlertType.ERROR);
     Alert infoAlert = new Alert(AlertType.INFORMATION);
     
-
     @FXML
     private Button btnAdicionarLivro;
 
