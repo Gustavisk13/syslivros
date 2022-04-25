@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.List;
-
 import dao.LivroDao;
 import domain.Livro;
 import javafx.collections.FXCollections;
@@ -16,7 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
+
 
 public class ConsultaLivroController {
 
@@ -28,7 +27,6 @@ public class ConsultaLivroController {
 
     @FXML
     private Button btnMenu;
-
     
     @FXML
     private Button btnMaisDez;
@@ -112,17 +110,20 @@ public class ConsultaLivroController {
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfAutor.clear();
+            contaFiltro--;
             }
             else if(tfISBN.getText() != ""){
             livros = ldao.findByIsbn(tfISBN.getText());
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfISBN.clear();
+            contaFiltro--;
             }else{
             livros = ldao.findByEdicao(tfEdicao.getText());
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfEdicao.clear();
+            contaFiltro--;
             }
         }
 
@@ -136,7 +137,10 @@ public class ConsultaLivroController {
         LivroDao ldao = new LivroDao();
         tfPesquisa.requestFocus();
         btnMaisDez.setVisible(true);
-        if (tfPesquisa.getText() != "") {
+        if(contaFiltro == 1){
+            handlerFiltrar(event);
+        }
+        else if (tfPesquisa.getText() != "") {
 
             titulo = tfPesquisa.getText();
             System.out.println(titulo);
@@ -208,14 +212,6 @@ public class ConsultaLivroController {
 
     }
     return livro;
-    }
-
-    private void refreshTable (){
-        LivroDao ldao = new LivroDao();
-        livros = ldao.findAll(20);
-        livrosObservableList = FXCollections.observableArrayList(livros);
-        tbvTabela.setItems(livrosObservableList);
-        tbvTabela.refresh();
     }
 
 }
