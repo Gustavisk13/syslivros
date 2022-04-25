@@ -146,6 +146,82 @@ public class LivroDao {
         return livros;
     }
 
+    public List<Livro> findByAutor(String autor){
+        String sql = "SELECT id, titulo, isbn, descricao, autor, edicao FROM livro WHERE UPPER(autor) like UPPER(?)";
+        Livro livro = null;
+        List<Livro> livros = null;
+
+        try (
+                Connection connection = ConfigDB.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);) {
+
+            statement.setString(1, ("%" + autor + "%"));
+            ResultSet resultSet = statement.executeQuery();
+            System.out.println(statement);
+            livros = new ArrayList<>();
+
+            while (resultSet.next()) {
+                livro = obterLivroPorResultSet(resultSet);
+                livros.add(livro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return livros;
+
+        
+    }
+    public List<Livro> findByIsbn (String isbn){
+        String sql = "SELECT id, titulo, isbn, descricao, autor, edicao FROM livro WHERE UPPER(isbn) like UPPER(?)";
+        Livro livro = null;
+        List<Livro> livros = null;
+
+        try (
+                Connection connection = ConfigDB.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);) {
+
+            statement.setString(1, ("%" + isbn + "%"));
+            ResultSet resultSet = statement.executeQuery();
+            System.out.println(statement);
+            livros = new ArrayList<>();
+
+            while (resultSet.next()) {
+                livro = obterLivroPorResultSet(resultSet);
+                livros.add(livro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return livros;
+
+    }
+    public List<Livro> findByEdicao (String edicao){
+        String sql = "SELECT id, titulo, isbn, descricao, autor, edicao FROM livro WHERE UPPER(edicao) like UPPER(?)";
+        Livro livro = null;
+        List<Livro> livros = null;
+
+        try (
+                Connection connection = ConfigDB.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);) {
+
+            statement.setString(1, ("%" + edicao + "%"));
+            ResultSet resultSet = statement.executeQuery();
+            System.out.println(statement);
+            livros = new ArrayList<>();
+
+            while (resultSet.next()) {
+                livro = obterLivroPorResultSet(resultSet);
+                livros.add(livro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return livros;
+
+    }
     private Livro obterLivroPorResultSet(ResultSet resultSet) throws SQLException {
         Livro livro = new Livro();
 

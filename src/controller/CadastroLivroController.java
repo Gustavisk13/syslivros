@@ -101,11 +101,11 @@ public class CadastroLivroController {
         String titulo;
         LivroDao ldao = new LivroDao();
         tfPesquisarLivro.requestFocus();
-        Boolean campoVazio = verificaCampoVazio();
         btnMaisDez.setVisible(true);
-        if (campoVazio == true) {
+        if (tfPesquisarLivro.getText() != "") {
 
             titulo = tfPesquisarLivro.getText();
+            System.out.println(titulo   );
             livros = ldao.findByTitulo(titulo);
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
@@ -162,6 +162,7 @@ public class CadastroLivroController {
 
             lDao.update(livro);
             limparCampos();
+            lblPreviewTitulo.setText("");
             refreshTable();
             
         }else if(campoVazio == false){
