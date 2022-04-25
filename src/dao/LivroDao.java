@@ -103,7 +103,7 @@ public class LivroDao {
     }
 
     public void update(Livro livro) {
-        String sql = "UPDATE livro SET titulo=?, isbn=?, edicao=?, autor=?, descricao=? WHERE id = (SELECT id FROM livro where titulo = ?)";
+        String sql = "UPDATE livro SET titulo=?, isbn=?, edicao=?, autor=?, descricao=? WHERE id = ?";
         try (
                 Connection connection = ConfigDB.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
@@ -112,7 +112,7 @@ public class LivroDao {
             statement.setInt(3, livro.getEdicao());
             statement.setString(4, livro.getAutor());
             statement.setString(5, livro.getDescricao());
-            statement.setString(6, livro.getTitulo());
+            statement.setLong(6, livro.getId());
 
             statement.executeUpdate();
 

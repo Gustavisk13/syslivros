@@ -159,6 +159,7 @@ public class CadastroLivroController {
             livro.setEdicao(Integer.parseInt(tfEdicaoLivro.getText()));
             livro.setAutor(tfAutorLivro.getText());
             livro.setDescricao(tfDescricaoLivro.getText());
+            livro.setId(Long.parseLong(lblIdHide.getText()));
 
             lDao.update(livro);
             limparCampos();
