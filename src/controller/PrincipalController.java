@@ -14,6 +14,9 @@ public class PrincipalController {
     private Button btnConsultaLivro;
 
     @FXML
+    private Button btnCadastroAutor;
+
+    @FXML
     void chamaCadastroLivro(ActionEvent event) throws Exception{
         Principal.mudarCenaCadastro();
     }
@@ -21,6 +24,11 @@ public class PrincipalController {
     @FXML
     void chamaConsultaLivro(ActionEvent event) throws Exception {
         Principal.mudarCenaConsulta();
+    }
+
+    @FXML
+    void chamaCadastroAutor(ActionEvent event) throws Exception{
+        Principal.mudarCenaCadastroAutor();
     }
 
 }

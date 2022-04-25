@@ -44,6 +44,15 @@ public class Principal extends Application {
 		stagePrincipal.show();
 	}
 
+	public static void mudarCenaCadastroAutor() throws Exception{
+		Parent root = FXMLLoader.load(Principal.class.getResource("../javafx/cenacadastroautor.fxml"));
+		Scene scene = new Scene(root);
+
+		stagePrincipal.setTitle("Sistema de Biblioteca - Cadastrar Autor");
+		stagePrincipal.setScene(scene);
+		stagePrincipal.show();
+	}
+
     public static void main(String[] args) {
         launch(args);
     }

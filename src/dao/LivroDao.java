@@ -42,12 +42,15 @@ public class LivroDao {
 
     public List<Livro> findAll(Integer busca) {
 
-        String sql = "SELECT id, titulo, isbn, edicao, autor, descricao FROM livro ";
+        String sql = "SELECT id, titulo, isbn, edicao, autor, descricao FROM livro FETCH NEXT ? ROWS ONLY ";
         List<Livro> livros = null;
 
         try (
                 Connection connection = ConfigDB.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, busca);
+            statement.executeQuery();
 
             ResultSet resultSet = statement.executeQuery();
             livros = new ArrayList<>();

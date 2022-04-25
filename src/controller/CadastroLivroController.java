@@ -3,7 +3,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.MaskFormatter;
-import dao.LivroDao;
 import domain.Livro;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,15 +20,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import service.LivroService;
 
 public class CadastroLivroController {
 
     private final int MAXISBN = 13;
     private List<Livro> livros;
-    ObservableList<Livro> livrosObservableList;
-    Integer somaBusca = 0;
-    Alert errorAlert = new Alert(AlertType.ERROR);
-    Alert infoAlert = new Alert(AlertType.INFORMATION);
+    private ObservableList<Livro> livrosObservableList;
+    private Integer somaBusca = 0;
+    private Long id;
+    private Alert errorAlert = new Alert(AlertType.ERROR);
+    private Alert infoAlert = new Alert(AlertType.INFORMATION);
+    private LivroService livroService = new LivroService();
+    private Livro livro = new Livro();
     
     @FXML
     private Button btnAdicionarLivro;
@@ -106,19 +109,18 @@ public class CadastroLivroController {
     @FXML
     void handlerBuscarLivro(ActionEvent event) {
         String titulo;
-        LivroDao ldao = new LivroDao();
         tfPesquisarLivro.requestFocus();
         btnMaisDez.setVisible(true);
         if (tfPesquisarLivro.getText() != "") {
 
             titulo = tfPesquisarLivro.getText();
-            System.out.println(titulo   );
-            livros = ldao.findByTitulo(titulo);
+            System.out.println(titulo);
+            livros = livroService.findByTitulo(titulo);
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfPesquisarLivro.clear();
         } else {
-            livros = ldao.findAll(20);
+            livros = livroService.findAll(20);
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfPesquisarLivro.clear();
@@ -129,13 +131,12 @@ public class CadastroLivroController {
     @FXML
     void handlerDeletarLivro(ActionEvent event) {
 
-        LivroDao lDao = new LivroDao();
         Boolean campoVazio = verificaCampoVazio();
         System.out.println(campoVazio);
         if (campoVazio == true) {
-            Long id = Long.parseLong(lblIdHide.getText());
+            id = Long.parseLong(lblIdHide.getText());
             System.out.println(id);
-            lDao.delete(id);
+            livroService.delete(id);
             refreshTable();
             limparCampos();
 
@@ -149,11 +150,10 @@ public class CadastroLivroController {
 
     @FXML
     void handlerEditarLivro(ActionEvent event) throws Exception {
-        Livro livro = new Livro();
-        LivroDao lDao = new LivroDao();
         final Integer ISBN_TAMANHO = tfIsbnLivro.getText().replace("-", "").length();
         Boolean campoVazio = verificaCampoVazio();
         Boolean tipoEdicao = verificaEdicao(tfEdicaoLivro.getText());
+        lblIdHide.setText(Long.toString(livro.getId()));
     
         if (campoVazio == true && ISBN_TAMANHO == MAXISBN && tipoEdicao == true) {
             livro.setTitulo(tfTituloLivro.getText());
@@ -163,7 +163,7 @@ public class CadastroLivroController {
             livro.setDescricao(tfDescricaoLivro.getText());
             livro.setId(Long.parseLong(lblIdHide.getText()));
 
-            lDao.update(livro);
+            livroService.update(livro);
             limparCampos();
             lblPreviewTitulo.setText("");
             refreshTable();
@@ -209,12 +209,9 @@ public class CadastroLivroController {
     @FXML
     void handlerInserirLivro(ActionEvent event) throws Exception {
 
-        final Integer ISBN_TAMANHO = tfIsbnLivro.getText().replace("-", "").length();
-        Alert errorAlert = new Alert(AlertType.ERROR);
-        Livro livro = new Livro();
-        LivroDao ldao = new LivroDao();
-        Boolean campoVazio = verificaCampoVazio();
-        Boolean tipoEdicao = verificaEdicao(tfEdicaoLivro.getText());
+         Integer ISBN_TAMANHO = tfIsbnLivro.getText().replace("-", "").length();
+         Boolean campoVazio = verificaCampoVazio();
+         Boolean tipoEdicao = verificaEdicao(tfEdicaoLivro.getText());
         
         if(campoVazio == true && ISBN_TAMANHO == MAXISBN && tipoEdicao == true){
             livro.setTitulo(tfTituloLivro.getText());
@@ -225,8 +222,9 @@ public class CadastroLivroController {
 
             infoAlert.setHeaderText("INSERIR LIVROS");
             infoAlert.setContentText("Livro Inserido com Sucesso !");
+            infoAlert.showAndWait();
 
-            ldao.insert(livro);
+            livroService.insert(livro);
         }
         else if(campoVazio == false){
             errorAlert.setHeaderText("INSERIR LIVROS");
@@ -242,18 +240,20 @@ public class CadastroLivroController {
             errorAlert.setHeaderText("INSERIR LIVROS");
             errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres !");
             errorAlert.showAndWait();
+
             lblCharFalta.setText("");
             livro.setIsbn((tfIsbnLivro.getText()));
-            Integer valorSobra = (livro.getIsbn().trim().length()) - MAXISBN;
+            final Integer valorSobra = (livro.getIsbn().trim().length()) - MAXISBN;
             lblCharSobra.setText(valorSobra + " caracteres passando!");
         }
         else if(ISBN_TAMANHO < MAXISBN){
             errorAlert.setHeaderText("INSERIR LIVROS");
             errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres !");
             errorAlert.showAndWait();
+
             lblCharSobra.setText("");
             livro.setIsbn((tfIsbnLivro.getText()));
-            Integer valorSobra = MAXISBN - (livro.getIsbn().trim().length());
+            final Integer valorSobra = MAXISBN - (livro.getIsbn().trim().length());
             lblCharFalta.setText(valorSobra + " caracteres faltando!");
         } 
         
@@ -262,14 +262,12 @@ public class CadastroLivroController {
 
     @FXML
     void handlerMaisDez(ActionEvent event) {
+
             somaBusca = somaBusca + 10;
-            LivroDao ldao = new LivroDao();
-            livros = ldao.findAll(20 + somaBusca);
+            livros = livroService.findAll(20 + somaBusca);
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfPesquisarLivro.clear();
-
-
     }
 
     @FXML
@@ -306,9 +304,9 @@ public class CadastroLivroController {
 
         private  String formatIsbn(String isbn) throws Exception{
             
-            Pattern pattern = Pattern.compile("-");
-            Matcher matcher = pattern.matcher(isbn);
-            boolean matcherFound = matcher.find();
+            final Pattern pattern = Pattern.compile("-");
+            final Matcher matcher = pattern.matcher(isbn);
+            final boolean matcherFound = matcher.find();
 
             if(matcherFound){
                 return isbn;
@@ -325,11 +323,11 @@ public class CadastroLivroController {
 
         private Boolean verificaCampoVazio() {
             
-            String titulo = tfTituloLivro.getText();
-            String isbn = tfIsbnLivro.getText();
-            String edicao = tfEdicaoLivro.getText();
-            String autor = tfAutorLivro.getText();
-            String descricao = tfDescricaoLivro.getText();
+            final String titulo = tfTituloLivro.getText();
+            final String isbn = tfIsbnLivro.getText();
+            final String edicao = tfEdicaoLivro.getText();
+            final String autor = tfAutorLivro.getText();
+            final String descricao = tfDescricaoLivro.getText();
 
             if((titulo != "") && (isbn != "") && (edicao != "") && (autor != "")
             && (descricao != "")){
@@ -340,16 +338,16 @@ public class CadastroLivroController {
         }
 
         private Livro livrosPorClick (MouseEvent event) {
-            Livro livro = tbvTabela.getSelectionModel().getSelectedItem();
+            livro = tbvTabela.getSelectionModel().getSelectedItem();
         if (event.getClickCount() == 2 && livro != null) {
 
+            lblIdHide.setText(Long.toString(livro.getId()));
             System.out.println(livro);
             tfTituloLivro.setText(livro.getTitulo());
             tfIsbnLivro.setText(livro.getIsbn());
             tfEdicaoLivro.setText(String.valueOf(livro.getEdicao()));
             tfAutorLivro.setText(livro.getAutor());
             tfDescricaoLivro.setText(livro.getDescricao());
-            lblIdHide.setText(Long.toString(livro.getId()));
             lblPreviewTitulo.setText(livro.getTitulo());
 
         }
@@ -357,8 +355,7 @@ public class CadastroLivroController {
         }
     
         private void refreshTable (){
-            LivroDao ldao = new LivroDao();
-            livros = ldao.findAll(20);
+            livros = livroService.findAll(20);
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tbvTabela.refresh();

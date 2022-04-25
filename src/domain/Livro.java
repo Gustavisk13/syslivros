@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.List;
+
 public class Livro {
 
     private Long id;
@@ -8,6 +10,8 @@ public class Livro {
     private Integer edicao;
     private String autor;
     private String descricao;
+
+    List<Autor> autores;
 
     public Livro() {
     }
