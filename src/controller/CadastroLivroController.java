@@ -2,9 +2,7 @@ package controller;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.swing.text.MaskFormatter;
-
 import dao.LivroDao;
 import domain.Livro;
 import javafx.collections.FXCollections;
@@ -27,9 +25,12 @@ import javafx.scene.input.MouseEvent;
 public class CadastroLivroController {
 
     private final int MAXISBN = 13;
+    private List<Livro> livros;
+    ObservableList<Livro> livrosObservableList;
     Integer somaBusca = 0;
     Alert errorAlert = new Alert(AlertType.ERROR);
     Alert infoAlert = new Alert(AlertType.INFORMATION);
+    
 
     @FXML
     private Button btnAdicionarLivro;
@@ -92,14 +93,16 @@ public class CadastroLivroController {
     private Button btnMaisDez;
 
     @FXML
+    private Label lblCharFalta;
+
+    @FXML
+    private Label lblCharSobra;
+
+    @FXML
     private TextField tfTituloLivro;
 
     @FXML
     private TextField tfPesquisarLivro;
-
-    ObservableList<Livro> livrosObservableList;
-
-    private List<Livro> livros;
 
     @FXML
     void handlerBuscarLivro(ActionEvent event) {
@@ -123,6 +126,7 @@ public class CadastroLivroController {
         }
 
     }
+    
     @FXML
     void handlerDeletarLivro(ActionEvent event) {
 
@@ -144,25 +148,15 @@ public class CadastroLivroController {
 
     }
 
-
-    private void limparCampos() {
-        tfTituloLivro.clear();
-        tfIsbnLivro.clear();
-        tfEdicaoLivro.clear();
-        tfAutorLivro.clear();
-        tfDescricaoLivro.clear();
-    }
-
     @FXML
     void handlerEditarLivro(ActionEvent event) throws Exception {
         Livro livro = new Livro();
         LivroDao lDao = new LivroDao();
-        
         final Integer ISBN_TAMANHO = tfIsbnLivro.getText().replace("-", "").length();
         Boolean campoVazio = verificaCampoVazio();
-        
-
-        if (campoVazio == true && ISBN_TAMANHO == MAXISBN) {
+        Boolean tipoEdicao = verificaEdicao(tfEdicaoLivro.getText());
+    
+        if (campoVazio == true && ISBN_TAMANHO == MAXISBN && tipoEdicao == true) {
             livro.setTitulo(tfTituloLivro.getText());
             livro.setIsbn(formatIsbn(tfIsbnLivro.getText()));
             livro.setEdicao(Integer.parseInt(tfEdicaoLivro.getText()));
@@ -184,19 +178,28 @@ public class CadastroLivroController {
             errorAlert.setContentText("Existem Campos vazios !");
             errorAlert.showAndWait();
             
-        }else if(ISBN_TAMANHO != MAXISBN){
+        }else if(tipoEdicao == false){
+            errorAlert.setHeaderText("INSERIR LIVROS");
+            errorAlert.setContentText("Campo edição deve ser somente números!");
+            errorAlert.showAndWait();
+        }else if(ISBN_TAMANHO > MAXISBN){
             errorAlert.setHeaderText("ATUALIZAÇÃO DE LIVROS");
             errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres");
             errorAlert.showAndWait();
-        } 
+            lblCharFalta.setText("");
+            livro.setIsbn((tfIsbnLivro.getText()));
+            Integer valorSobra = (livro.getIsbn().trim().length()) - MAXISBN;
+            lblCharSobra.setText(valorSobra + " caracteres passando!");
+        }else if(ISBN_TAMANHO < MAXISBN){
+            errorAlert.setHeaderText("ATUALIZAÇÃO DE LIVROS");
+            errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres");
+            errorAlert.showAndWait();
+            lblCharSobra.setText("");
+            livro.setIsbn((tfIsbnLivro.getText()));
+            Integer valorSobra = MAXISBN - (livro.getIsbn().trim().length());
+            lblCharFalta.setText(valorSobra + " caracteres faltando!"); 
+        }
 
-    }
-
-    public void initialize() {
-        tcTitulo.setCellValueFactory(new PropertyValueFactory<Livro, String>("titulo"));
-        tcIsbn.setCellValueFactory(new PropertyValueFactory<Livro, String>("isbn"));
-        tcEdicao.setCellValueFactory(new PropertyValueFactory<Livro, Integer>("edicao"));
-        tcAutor.setCellValueFactory(new PropertyValueFactory<Livro, String>("autor"));
     }
 
     @FXML
@@ -209,11 +212,12 @@ public class CadastroLivroController {
 
         final Integer ISBN_TAMANHO = tfIsbnLivro.getText().replace("-", "").length();
         Alert errorAlert = new Alert(AlertType.ERROR);
+        Livro livro = new Livro();
+        LivroDao ldao = new LivroDao();
         Boolean campoVazio = verificaCampoVazio();
+        Boolean tipoEdicao = verificaEdicao(tfEdicaoLivro.getText());
         
-        if(campoVazio == true && ISBN_TAMANHO == MAXISBN){
-            Livro livro = new Livro();
-            LivroDao ldao = new LivroDao();
+        if(campoVazio == true && ISBN_TAMANHO == MAXISBN && tipoEdicao == true){
             livro.setTitulo(tfTituloLivro.getText());
             livro.setIsbn(formatIsbn(tfIsbnLivro.getText()));
             livro.setEdicao(Integer.parseInt(tfEdicaoLivro.getText()));
@@ -224,15 +228,34 @@ public class CadastroLivroController {
             infoAlert.setContentText("Livro Inserido com Sucesso !");
 
             ldao.insert(livro);
-        }else if(campoVazio == false){
+        }
+        else if(campoVazio == false){
             errorAlert.setHeaderText("INSERIR LIVROS");
             errorAlert.setContentText("Existem Campos vazios !");
             errorAlert.showAndWait();
         }
-        else if(ISBN_TAMANHO != MAXISBN){
+        else if(tipoEdicao == false){
+            errorAlert.setHeaderText("INSERIR LIVROS");
+            errorAlert.setContentText("Campo edição deve ser somente números!");
+            errorAlert.showAndWait();
+        }
+        else if(ISBN_TAMANHO > MAXISBN){
             errorAlert.setHeaderText("INSERIR LIVROS");
             errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres !");
             errorAlert.showAndWait();
+            lblCharFalta.setText("");
+            livro.setIsbn((tfIsbnLivro.getText()));
+            Integer valorSobra = (livro.getIsbn().trim().length()) - MAXISBN;
+            lblCharSobra.setText(valorSobra + " caracteres passando!");
+        }
+        else if(ISBN_TAMANHO < MAXISBN){
+            errorAlert.setHeaderText("INSERIR LIVROS");
+            errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres !");
+            errorAlert.showAndWait();
+            lblCharSobra.setText("");
+            livro.setIsbn((tfIsbnLivro.getText()));
+            Integer valorSobra = MAXISBN - (livro.getIsbn().trim().length());
+            lblCharFalta.setText(valorSobra + " caracteres faltando!");
         } 
         
 
@@ -259,6 +282,28 @@ public class CadastroLivroController {
     void handlerVoltarMenu(ActionEvent event) throws Exception {
         Principal.mudarCenaPrincipal();
     }
+
+        public void initialize() {
+            tcTitulo.setCellValueFactory(new PropertyValueFactory<Livro, String>("titulo"));
+            tcIsbn.setCellValueFactory(new PropertyValueFactory<Livro, String>("isbn"));
+            tcEdicao.setCellValueFactory(new PropertyValueFactory<Livro, Integer>("edicao"));
+            tcAutor.setCellValueFactory(new PropertyValueFactory<Livro, String>("autor"));
+        }
+        
+        private boolean verificaEdicao(String f) 
+{ 
+        try 
+        { 
+            Integer.parseInt(f);
+            System.out.println("É inteiro"); 
+            return true; 
+        } 
+        catch (NumberFormatException e) 
+        { 
+            System.out.println("Não é inteiro"); 
+            return false; 
+        } 
+}
 
         private  String formatIsbn(String isbn) throws Exception{
             
@@ -319,5 +364,19 @@ public class CadastroLivroController {
             tbvTabela.setItems(livrosObservableList);
             tbvTabela.refresh();
         }
+    
+        private void limparCampos() {
+            tfTituloLivro.clear();
+            tfIsbnLivro.clear();
+            tfEdicaoLivro.clear();
+            tfAutorLivro.clear();
+            tfDescricaoLivro.clear();
+            lblPreviewTitulo.setText("");
+            lblCharSobra.setText("");
+            lblCharFalta.setText("");
+        }
+    
+    
+    
     
     }
