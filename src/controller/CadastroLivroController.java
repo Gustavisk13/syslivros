@@ -28,6 +28,8 @@ public class CadastroLivroController {
 
     private final int MAXISBN = 13;
     Integer somaBusca = 0;
+    Alert errorAlert = new Alert(AlertType.ERROR);
+    Alert infoAlert = new Alert(AlertType.INFORMATION);
 
     @FXML
     private Button btnAdicionarLivro;
@@ -49,6 +51,9 @@ public class CadastroLivroController {
 
     @FXML
     private Label lblPreviewTitulo;
+
+    @FXML
+    private Label lblTempo;
 
     @FXML
     private TableView<Livro> tbvTabela;
@@ -118,12 +123,12 @@ public class CadastroLivroController {
         }
 
     }
-
     @FXML
     void handlerDeletarLivro(ActionEvent event) {
 
         LivroDao lDao = new LivroDao();
         Boolean campoVazio = verificaCampoVazio();
+        System.out.println(campoVazio);
         if (campoVazio == true) {
             Long id = Long.parseLong(lblIdHide.getText());
             System.out.println(id);
@@ -131,9 +136,14 @@ public class CadastroLivroController {
             refreshTable();
             limparCampos();
 
+        }else{
+            errorAlert.setHeaderText("EXCLUSÃO DE LIVROS");
+            errorAlert.setContentText("Existem Campos Vazios!");
+            errorAlert.showAndWait();
         }
 
     }
+
 
     private void limparCampos() {
         tfTituloLivro.clear();
@@ -149,7 +159,6 @@ public class CadastroLivroController {
         LivroDao lDao = new LivroDao();
         
         final Integer ISBN_TAMANHO = tfIsbnLivro.getText().replace("-", "").length();
-        Alert errorAlert = new Alert(AlertType.ERROR);
         Boolean campoVazio = verificaCampoVazio();
         
 
@@ -165,14 +174,18 @@ public class CadastroLivroController {
             limparCampos();
             lblPreviewTitulo.setText("");
             refreshTable();
+
+            infoAlert.setHeaderText("ATUALIZAÇÃO DE LIVROS");
+            infoAlert.setContentText("Livro Atualizado Com Sucesso!!!");
+            infoAlert.showAndWait();
             
         }else if(campoVazio == false){
-            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setHeaderText("ATUALIZAÇÃO DE LIVROS");
             errorAlert.setContentText("Existem Campos vazios !");
             errorAlert.showAndWait();
             
         }else if(ISBN_TAMANHO != MAXISBN){
-            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setHeaderText("ATUALIZAÇÃO DE LIVROS");
             errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres");
             errorAlert.showAndWait();
         } 
@@ -207,15 +220,18 @@ public class CadastroLivroController {
             livro.setAutor(tfAutorLivro.getText());
             livro.setDescricao(tfDescricaoLivro.getText());
 
+            infoAlert.setHeaderText("INSERIR LIVROS");
+            infoAlert.setContentText("Livro Inserido com Sucesso !");
+
             ldao.insert(livro);
         }else if(campoVazio == false){
-            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setHeaderText("INSERIR LIVROS");
             errorAlert.setContentText("Existem Campos vazios !");
             errorAlert.showAndWait();
         }
         else if(ISBN_TAMANHO != MAXISBN){
-            errorAlert.setHeaderText("Input not valid");
-            errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres");
+            errorAlert.setHeaderText("INSERIR LIVROS");
+            errorAlert.setContentText("O tamanho do campo ISBN deve ser 13 caracteres !");
             errorAlert.showAndWait();
         } 
         

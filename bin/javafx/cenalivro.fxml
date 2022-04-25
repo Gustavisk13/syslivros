@@ -37,12 +37,12 @@
             <TextField fx:id="tfIsbnLivro" layoutX="95.0" layoutY="193.0" />
             <TextField fx:id="tfEdicaoLivro" layoutX="95.0" layoutY="244.0" />
             <TextField fx:id="tfAutorLivro" layoutX="95.0" layoutY="290.0" />
-            <Button fx:id="tfLimparLivro" layoutX="67.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerLimparLivro" text="LIMPAR" />
-            <Button fx:id="btnAdicionarLivro" layoutX="20.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerInserirLivro" text="ADD" />
+            <Button fx:id="tfLimparLivro" layoutX="98.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerLimparLivro" text="LIMPAR" />
+            <Button fx:id="btnAdicionarLivro" layoutX="10.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerInserirLivro" text="ADICIONAR" />
             <Button fx:id="btnBuscarLivro" layoutX="261.0" layoutY="14.0" mnemonicParsing="false" onAction="#handlerBuscarLivro" text="BUSCAR" />
-            <Button fx:id="btnDeletarLivro" layoutX="133.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerDeletarLivro" prefHeight="25.0" prefWidth="42.0" text="DEL" />
+            <Button fx:id="btnDeletarLivro" layoutX="164.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerDeletarLivro" prefHeight="25.0" prefWidth="42.0" text="DEL" />
             <TextField fx:id="tfPesquisarLivro" layoutX="6.0" layoutY="14.0" prefHeight="25.0" prefWidth="252.0" promptText="PESQUISAR" />
-            <Button fx:id="btnEditar" layoutX="184.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerEditarLivro" text="ATUALIZAR" />
+            <Button fx:id="btnEditar" layoutX="215.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerEditarLivro" text="ATUALIZAR" />
             <Label fx:id="lblIdHide" layoutX="39.0" layoutY="415.0" visible="false" />
             <Label fx:id="lblPreviewTitulo" alignment="CENTER" layoutX="9.0" layoutY="108.0" prefHeight="17.0" prefWidth="307.0">
                <font>
@@ -68,6 +68,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
+            <Label fx:id="lblTempo" layoutX="14.0" layoutY="18.0" text="tempo de consulta" visible="false" />
          </children>
       </AnchorPane>
    </right>

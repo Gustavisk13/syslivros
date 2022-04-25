@@ -20,7 +20,7 @@ public class LivroDao {
 
         try (
                 Connection connection = ConfigDB.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+                PreparedStatement statement = connection.prepareStatement(sql, new int[]{1});) {
               
             
             statement.setString(1, livro.getTitulo());
@@ -34,7 +34,7 @@ public class LivroDao {
 
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
-            livro.setId(resultSet.getLong("id"));
+            livro.setId(Integer.toUnsignedLong(resultSet.getInt(1)));
 
         } catch (SQLException e )  {
             e.printStackTrace();
