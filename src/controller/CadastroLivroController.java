@@ -1,18 +1,25 @@
 package controller;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.MaskFormatter;
+
+import dao.AutorDao;
+import dao.LivroAutorDao;
+import domain.Autor;
 import domain.Livro;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -26,13 +33,20 @@ public class CadastroLivroController {
 
     private final int MAXISBN = 13;
     private List<Livro> livros;
+    private List<Autor> autoresSelecionados;
+    private List<Autor> autores;
     private ObservableList<Livro> livrosObservableList;
+    private ObservableList<Autor> autoresObservableList;
     private Integer somaBusca = 0;
     private Long id;
     private Alert errorAlert = new Alert(AlertType.ERROR);
     private Alert infoAlert = new Alert(AlertType.INFORMATION);
     private LivroService livroService = new LivroService();
     private Livro livro = new Livro();
+ 
+
+    @FXML
+    private Button btnAdicionarAutor;
     
     @FXML
     private Button btnAdicionarLivro;
@@ -58,23 +72,12 @@ public class CadastroLivroController {
     @FXML
     private Label lblTempo;
 
-    @FXML
-    private TableView<Livro> tbvTabela;
 
     @FXML
-    private TableColumn<Livro, String> tcAutor;
+    private TableView<Autor> tbvAutor;
 
     @FXML
-    private TableColumn<Livro, Integer> tcEdicao;
-
-    @FXML
-    private TableColumn<Livro, String> tcIsbn;
-
-    @FXML
-    private TableColumn<Livro, String> tcTitulo;
-
-    @FXML
-    private TextField tfAutorLivro;
+    private TableColumn<Autor, String> tvAutoresDisponiveis;
 
     @FXML
     private TextArea tfDescricaoLivro;
@@ -106,8 +109,27 @@ public class CadastroLivroController {
     @FXML
     private TextField tfPesquisarLivro;
 
+    public CadastroLivroController(){
+        this.autoresSelecionados = new ArrayList<>();
+    }
+
+    public void preencheLivro(Livro livro){
+        
+            System.out.println(lblIdHide.getText());
+            lblIdHide.setText(Long.toString(livro.getId()));
+            System.out.println(livro);
+            tfTituloLivro.setText(livro.getTitulo());
+            tfIsbnLivro.setText(livro.getIsbn());
+            tfEdicaoLivro.setText(String.valueOf(livro.getEdicao()));
+            autoresObservableList = FXCollections.observableArrayList(livro.getAutores());
+            tbvAutor.setItems(autoresObservableList);
+            tfDescricaoLivro.setText(livro.getDescricao());
+        
+    }
+
     @FXML
     void handlerBuscarLivro(ActionEvent event) {
+         AutorDao aDao = new AutorDao();/*
         String titulo;
         tfPesquisarLivro.requestFocus();
         btnMaisDez.setVisible(true);
@@ -116,15 +138,20 @@ public class CadastroLivroController {
             titulo = tfPesquisarLivro.getText();
             System.out.println(titulo);
             livros = livroService.findByTitulo(titulo);
+            
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfPesquisarLivro.clear();
+            
         } else {
             livros = livroService.findAll(20);
-            livrosObservableList = FXCollections.observableArrayList(livros);
-            tbvTabela.setItems(livrosObservableList);
+            */
+            autores = aDao.findAll(20);
+            autoresObservableList = FXCollections.observableArrayList(autores);
+            tbvAutor.setItems(autoresObservableList);
+            /*
             tfPesquisarLivro.clear();
-        }
+        } */
 
     }
     
@@ -137,6 +164,8 @@ public class CadastroLivroController {
             id = Long.parseLong(lblIdHide.getText());
             System.out.println(id);
             livroService.delete(id);
+            //livroAutorDao.delete(id);
+            
             refreshTable();
             limparCampos();
 
@@ -153,17 +182,17 @@ public class CadastroLivroController {
         final Integer ISBN_TAMANHO = tfIsbnLivro.getText().replace("-", "").length();
         Boolean campoVazio = verificaCampoVazio();
         Boolean tipoEdicao = verificaEdicao(tfEdicaoLivro.getText());
-        lblIdHide.setText(Long.toString(livro.getId()));
+         lblIdHide.setText(Long.toString(livro.getId()));
     
         if (campoVazio == true && ISBN_TAMANHO == MAXISBN && tipoEdicao == true) {
             livro.setTitulo(tfTituloLivro.getText());
             livro.setIsbn(formatIsbn(tfIsbnLivro.getText()));
             livro.setEdicao(Integer.parseInt(tfEdicaoLivro.getText()));
-            livro.setAutor(tfAutorLivro.getText());
             livro.setDescricao(tfDescricaoLivro.getText());
             livro.setId(Long.parseLong(lblIdHide.getText()));
 
             livroService.update(livro);
+            
             limparCampos();
             lblPreviewTitulo.setText("");
             refreshTable();
@@ -217,14 +246,17 @@ public class CadastroLivroController {
             livro.setTitulo(tfTituloLivro.getText());
             livro.setIsbn(formatIsbn(tfIsbnLivro.getText()));
             livro.setEdicao(Integer.parseInt(tfEdicaoLivro.getText()));
-            livro.setAutor(tfAutorLivro.getText());
+            livro.setAutores(autoresSelecionados);
             livro.setDescricao(tfDescricaoLivro.getText());
+
+            livroService.insert(livro);
+            
 
             infoAlert.setHeaderText("INSERIR LIVROS");
             infoAlert.setContentText("Livro Inserido com Sucesso !");
             infoAlert.showAndWait();
 
-            livroService.insert(livro);
+            
         }
         else if(campoVazio == false){
             errorAlert.setHeaderText("INSERIR LIVROS");
@@ -263,16 +295,16 @@ public class CadastroLivroController {
     @FXML
     void handlerMaisDez(ActionEvent event) {
 
-            somaBusca = somaBusca + 10;
+           /*  somaBusca = somaBusca + 10;
             livros = livroService.findAll(20 + somaBusca);
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
-            tfPesquisarLivro.clear();
+            tfPesquisarLivro.clear(); */
     }
 
     @FXML
     void handlerTabela(MouseEvent event) {
-        livrosPorClick(event);
+        //livrosPorClick(event);
     }
 
     @FXML
@@ -280,27 +312,51 @@ public class CadastroLivroController {
         Principal.mudarCenaPrincipal();
     }
 
+    @FXML
+    void handlerAdicionarAutor(ActionEvent event) throws Exception {
+        Principal.mudarCenaCadastroAutor();
+    }
+    
+    @FXML
+    void handlerAutoresDisponiveis(MouseEvent event) {
+        tbvAutor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        
+        if(tbvAutor.getSelectionModel().getSelectedItems() != null){
+            Autor autor = tbvAutor.getSelectionModel().getSelectedItem();
+            if(!autoresSelecionados.contains(autor)){
+                autoresSelecionados.add(autor);
+                System.out.println("Adicionado");
+            }else{
+                autoresSelecionados.remove(autor);
+                System.out.println("removido");
+            }
+
+        livro.setAutores(autoresSelecionados);
+
+        }
+
+
+    }
+
         public void initialize() {
-            tcTitulo.setCellValueFactory(new PropertyValueFactory<Livro, String>("titulo"));
-            tcIsbn.setCellValueFactory(new PropertyValueFactory<Livro, String>("isbn"));
-            tcEdicao.setCellValueFactory(new PropertyValueFactory<Livro, Integer>("edicao"));
-            tcAutor.setCellValueFactory(new PropertyValueFactory<Livro, String>("autor"));
+            tvAutoresDisponiveis.setCellValueFactory(new PropertyValueFactory<Autor, String>("nome"));
+
+            
         }
         
-        private boolean verificaEdicao(String f) 
-{ 
-        try 
-        { 
-            Integer.parseInt(f);
-            System.out.println("É inteiro"); 
-            return true; 
-        } 
-        catch (NumberFormatException e) 
-        { 
-            System.out.println("Não é inteiro"); 
-            return false; 
-        } 
-}
+        public boolean verificaEdicao(String f) { 
+            try 
+            { 
+                Integer.parseInt(f);
+                System.out.println("É inteiro"); 
+                return true; 
+            } 
+            catch (NumberFormatException e) 
+            { 
+                System.out.println("Não é inteiro"); 
+                return false; 
+            } 
+        }
 
         private  String formatIsbn(String isbn) throws Exception{
             
@@ -326,18 +382,16 @@ public class CadastroLivroController {
             final String titulo = tfTituloLivro.getText();
             final String isbn = tfIsbnLivro.getText();
             final String edicao = tfEdicaoLivro.getText();
-            final String autor = tfAutorLivro.getText();
             final String descricao = tfDescricaoLivro.getText();
 
-            if((titulo != "") && (isbn != "") && (edicao != "") && (autor != "")
-            && (descricao != "")){
+            if((titulo != "") && (isbn != "") && (edicao != "") && (descricao != "")){
                 return true;
             }else{
                 return false;
             }
         }
 
-        private Livro livrosPorClick (MouseEvent event) {
+        /* private Livro livrosPorClick (MouseEvent event) {
             livro = tbvTabela.getSelectionModel().getSelectedItem();
         if (event.getClickCount() == 2 && livro != null) {
 
@@ -346,33 +400,31 @@ public class CadastroLivroController {
             tfTituloLivro.setText(livro.getTitulo());
             tfIsbnLivro.setText(livro.getIsbn());
             tfEdicaoLivro.setText(String.valueOf(livro.getEdicao()));
-            tfAutorLivro.setText(livro.getAutor());
+            //tfAutorLivro.setText(livro.getAutor());
             tfDescricaoLivro.setText(livro.getDescricao());
             lblPreviewTitulo.setText(livro.getTitulo());
 
         }
         return livro;
-        }
+        } */
     
         private void refreshTable (){
             livros = livroService.findAll(20);
             livrosObservableList = FXCollections.observableArrayList(livros);
-            tbvTabela.setItems(livrosObservableList);
-            tbvTabela.refresh();
+            /* tbvTabela.setItems(livrosObservableList);
+            tbvTabela.refresh(); */
         }
     
         private void limparCampos() {
             tfTituloLivro.clear();
             tfIsbnLivro.clear();
             tfEdicaoLivro.clear();
-            tfAutorLivro.clear();
             tfDescricaoLivro.clear();
             lblPreviewTitulo.setText("");
             lblCharSobra.setText("");
             lblCharFalta.setText("");
         }
     
-    
-    
+
     
     }

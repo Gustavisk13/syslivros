@@ -8,20 +8,24 @@ public class Livro {
     private String titulo;
     private String isbn;
     private Integer edicao;
-    private String autor;
     private String descricao;
+    private String autor;
 
-    List<Autor> autores;
+    private List<Autor> autores;
+
+    
 
     public Livro() {
     }
 
-    public Livro(String titulo, String isbn, Integer edicao) {
-
+    public Livro(Long id, String titulo, String isbn, Integer edicao, String descricao, List<Autor> autores, String autor) {
+        this.id = id;
         this.titulo = titulo;
         this.isbn = isbn;
         this.edicao = edicao;
-
+        this.descricao = descricao;
+        this.autores = autores;
+        this.autor = autor;
     }
 
     public Long getId() {
@@ -56,14 +60,6 @@ public class Livro {
         this.edicao = edicao;
     }
 
-    public String getAutor() {
-        return autor;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-
     public String getDescricao() {
         return descricao;
     }
@@ -72,10 +68,25 @@ public class Livro {
         this.descricao = descricao;
     }
 
-    @Override
-    public String toString() {
-        return "Livro [autor=" + autor + ", descricao=" + descricao + ", edicao=" + edicao + ", id=" + id + ", isbn="
-                + isbn + ", titulo=" + titulo + "]";
+    public List<Autor> getAutores() {
+        return autores;
     }
 
+    public void setAutores(List<Autor> autores) {
+        this.autores = autores;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    @Override
+    public String toString() {
+        return "Livro [autor=" + autor + ", autores=" + autores + ", descricao=" + descricao + ", edicao=" + edicao
+                + ", id=" + id + ", isbn=" + isbn + ", titulo=" + titulo + "]";
+    }
 }

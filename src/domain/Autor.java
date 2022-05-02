@@ -9,16 +9,17 @@ public class Autor {
     private String nacionalidade;
     private Integer ano_nascimento;
 
-    List<Livro> livros;
+    private List<Livro> livros;
 
     public Autor() {
     }
 
-    public Autor(Long idAutor, String nome, String nacionalidade, Integer ano_nascimento) {
+    public Autor(Long idAutor, String nome, String nacionalidade, Integer ano_nascimento, List<Livro> livros) {
         this.idAutor = idAutor;
         this.nome = nome;
         this.nacionalidade = nacionalidade;
         this.ano_nascimento = ano_nascimento;
+        this.livros = livros;
     }
 
     public Long getIdAutor() {
@@ -51,6 +52,14 @@ public class Autor {
 
     public void setAno_nascimento(Integer ano_nascimento) {
         this.ano_nascimento = ano_nascimento;
+    }
+
+    public List<Livro> getLivros() {
+        return livros;
+    }
+
+    public void setLivros(List<Livro> livros) {
+        this.livros = livros;
     }
 
     @Override

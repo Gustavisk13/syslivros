@@ -2,6 +2,7 @@ package service;
 
 import java.util.List;
 
+import dao.LivroAutorDao;
 import dao.LivroDao;
 import domain.Livro;
 
@@ -18,9 +19,11 @@ public class LivroService {
     return lDao.findAll(busca);
     }
 
-    public Livro findById(Long id){
+    public List<Livro> findById(Long id){
+        List<Livro> l = lDao.findById(id);
+        
 
-    return lDao.findById(id);
+    return l;
     }
 
     public void delete(Long id){

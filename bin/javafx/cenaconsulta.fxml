@@ -115,6 +115,7 @@
                   <Font name="Arial Italic" size="27.0" />
                </font>
             </Label>
+            <Button fx:id="btnEditar" layoutX="487.0" layoutY="37.0" mnemonicParsing="false" onAction="#handlerEditarLivro" text="EDITAR" visible="false" />
          </children>
       </AnchorPane>
    </center>

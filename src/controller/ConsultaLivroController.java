@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 import dao.LivroDao;
+import domain.Autor;
 import domain.Livro;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,11 @@ public class ConsultaLivroController {
 
     Integer somaBusca = 0;
     Integer contaFiltro = 0;
+    Autor autor = new Autor();
+    CadastroLivroController cAutor = new CadastroLivroController();
+
+    @FXML
+    private Button btnEditar;
 
     @FXML
     private Button btnFiltro;
@@ -99,6 +105,23 @@ public class ConsultaLivroController {
     private List<Livro> livros;
 
     @FXML
+    void handlerEditarLivro(ActionEvent event) throws Exception {
+        
+        Livro livro = new Livro();
+        
+
+        livro.setId(Long.parseLong(lblFiltroAutor.getText()));
+        livro.setTitulo(lblTitulo.getText());
+        livro.setAutor(lblAutor.getText());
+        livro.setIsbn(lblISBN.getText());
+        livro.setDescricao(lblDescricao.getText());
+
+        cAutor.preencheLivro(livro);
+        Principal.mudarCenaCadastro();
+        
+    }
+
+    @FXML
     void handlerFiltrar(ActionEvent event) {
         LivroDao ldao = new LivroDao();
         revelaFiltro();
@@ -143,8 +166,15 @@ public class ConsultaLivroController {
         else if (tfPesquisa.getText() != "") {
 
             titulo = tfPesquisa.getText();
-            System.out.println(titulo);
-            livros = ldao.findByTitulo(titulo);
+            Boolean tipo = cAutor.verificaEdicao(titulo);
+            
+            if(tipo == false ){
+                System.out.println("TITULO");
+                livros = ldao.findByTitulo(titulo);
+            }else{
+                System.out.println("ID");
+                livros = ldao.findById(Long.parseLong(titulo));
+            }
             livrosObservableList = FXCollections.observableArrayList(livros);
             tbvTabela.setItems(livrosObservableList);
             tfPesquisa.clear();
@@ -203,14 +233,14 @@ public class ConsultaLivroController {
         System.out.println(livro);
         lblTitulo.setText(livro.getTitulo());
         lblISBN.setText(livro.getIsbn());
-        lblEdicao.setText(String.valueOf(livro.getEdicao()));
         lblAutor.setText(livro.getAutor());
         lblDescricao.setText(livro.getDescricao());
+        lblFiltroAutor.setText(String.valueOf(livro.getId()));
 
         revelaConsulta();
         lblPlaceHolder.setVisible(false);
+        btnEditar.setVisible(true);
         
-
     }
     return livro;
     }

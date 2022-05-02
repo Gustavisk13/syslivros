@@ -1,4 +1,5 @@
 package controller;
+import domain.Livro;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,6 +34,7 @@ public class Principal extends Application {
 		stagePrincipal.setTitle("Sistema de Biblioteca - Cadastrar Livro");
 		stagePrincipal.setScene(scene);
 		stagePrincipal.show();
+		
 	}
 
 	public static void mudarCenaConsulta() throws Exception{

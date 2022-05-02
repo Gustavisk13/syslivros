@@ -31,12 +31,11 @@
             <Label layoutX="32.0" layoutY="155.0" text="TITULO" />
             <Label layoutX="32.0" layoutY="197.0" text="ISBN" />
             <Label layoutX="32.0" layoutY="248.0" text="EDIÇÃO" />
-            <Label layoutX="32.0" layoutY="294.0" text="AUTOR" />
-            <Label layoutX="27.0" layoutY="385.0" text="DESCRIÇÃO" />
+            <Label layoutX="32.0" layoutY="290.0" text="AUTOR" />
+            <Label layoutX="27.0" layoutY="482.0" text="DESCRIÇÃO" />
             <TextField fx:id="tfTituloLivro" layoutX="95.0" layoutY="151.0" />
             <TextField fx:id="tfIsbnLivro" layoutX="95.0" layoutY="193.0" />
             <TextField fx:id="tfEdicaoLivro" layoutX="95.0" layoutY="244.0" />
-            <TextField fx:id="tfAutorLivro" layoutX="95.0" layoutY="290.0" />
             <Button fx:id="tfLimparLivro" layoutX="98.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerLimparLivro" text="LIMPAR" />
             <Button fx:id="btnAdicionarLivro" layoutX="10.0" layoutY="63.0" mnemonicParsing="false" onAction="#handlerInserirLivro" text="ADICIONAR" />
             <Button fx:id="btnBuscarLivro" layoutX="261.0" layoutY="14.0" mnemonicParsing="false" onAction="#handlerBuscarLivro" text="BUSCAR" />
@@ -49,29 +48,20 @@
                   <Font name="Arial Black" size="17.0" />
                </font>
             </Label>
-            <TextArea fx:id="tfDescricaoLivro" layoutX="96.0" layoutY="339.0" prefHeight="126.0" prefWidth="209.0" wrapText="true" />
+            <TextArea fx:id="tfDescricaoLivro" layoutX="96.0" layoutY="436.0" prefHeight="126.0" prefWidth="209.0" wrapText="true" />
             <Button fx:id="btnMaisDez" layoutX="327.0" layoutY="14.0" mnemonicParsing="false" onAction="#handlerMaisDez" text="+10" visible="false" />
             <Label fx:id="lblCharFalta" layoutX="264.0" layoutY="197.0" />
             <Label fx:id="lblCharSobra" layoutX="263.0" layoutY="197.0" />
-         </children>
-      </AnchorPane>
-   </left>
-   <right>
-      <AnchorPane prefHeight="501.0" prefWidth="402.0" BorderPane.alignment="CENTER">
-         <children>
-            <TableView fx:id="tbvTabela" layoutX="9.0" layoutY="41.0" onMouseClicked="#handlerTabela" prefHeight="524.0" prefWidth="381.0">
+            <TableView fx:id="tbvAutor" layoutX="99.0" layoutY="286.0" onMouseClicked="#handlerAutoresDisponiveis" prefHeight="144.0" prefWidth="142.0">
                <columns>
-                  <TableColumn fx:id="tcTitulo" prefWidth="75.0" text="TITULO" />
-                  <TableColumn fx:id="tcIsbn" prefWidth="116.0" text="ISBN" />
-                  <TableColumn fx:id="tcEdicao" prefWidth="74.0" text="EDIÇÃO" />
-                  <TableColumn fx:id="tcAutor" prefWidth="75.0" text="AUTOR" />
+                  <TableColumn fx:id="tvAutoresDisponiveis" prefWidth="75.0" text="Autores Disponiveis" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Label fx:id="lblTempo" layoutX="14.0" layoutY="18.0" text="tempo de consulta" visible="false" />
+            <Button fx:id="btnAdicionarAutor" layoutX="247.0" layoutY="286.0" mnemonicParsing="false" onAction="#handlerAdicionarAutor" text="+" />
          </children>
       </AnchorPane>
-   </right>
+   </left>
 </BorderPane>
